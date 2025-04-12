@@ -6,19 +6,19 @@ function Navbar() {
   const [theme, setTheme] = useState('light');
   const [user, setUser] = useState(null);
 
-  // Scroll shadow effect
+  // Scroll effect for shadow
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Load user from localStorage
+  // Check localStorage for login
   useEffect(() => {
-    const stored = localStorage.getItem('token');
-    if (stored) {
-      const storedName = localStorage.getItem('name') || 'User';
-      setUser({ name: storedName });
+    const token = localStorage.getItem('token');
+    if (token) {
+      const name = localStorage.getItem('name') || 'User';
+      setUser({ name });
     }
   }, []);
 
@@ -32,7 +32,7 @@ function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
     setUser(null);
-    window.location.reload(); // Optional: refresh to reset UI
+    window.location.reload(); // reload to reflect changes
   };
 
   return (
@@ -40,6 +40,7 @@ function Navbar() {
       scrolled ? 'shadow-lg bg-base-100 bg-opacity-95 backdrop-blur-lg' : 'bg-base-100 bg-opacity-80 backdrop-blur-md'
     }`}>
       <div className="navbar px-4 lg:px-10">
+
         {/* Start */}
         <div className="navbar-start">
           <div className="dropdown">
@@ -52,7 +53,7 @@ function Navbar() {
             </label>
             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg rounded-box w-52 bg-base-200">
               <li><a href="/"><Home className="w-4 h-4" /> Home</a></li>
-              <li><a href="/ChatPage"><Bot className="w-4 h-4" /> ChatBot</a></li>
+              {user && <li><a href="/ChatPage"><Bot className="w-4 h-4" /> ChatBot</a></li>}
               <li><a href="/Resources">📁 Resources</a></li>
               <li><a href="/About"><Info className="w-4 h-4 text-white-500" /> About</a></li>
             </ul>
@@ -66,7 +67,7 @@ function Navbar() {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-3">
             <li><a href="/"><Home className="w-4 h-4" /> Home</a></li>
-            <li><a href="/ChatPage"><Bot className="w-4 h-4" /> ChatBot</a></li>
+            {user && <li><a href="/ChatPage"><Bot className="w-4 h-4" /> ChatBot</a></li>}
             <li><a href="/Resources">📁 Resources</a></li>
             <li><a href="/About"><Info className="w-4 h-4 text-white-500" /> About</a></li>
           </ul>
@@ -90,7 +91,7 @@ function Navbar() {
                 </div>
               </div>
               <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow-lg bg-base-200 rounded-box w-48">
-                <li><a><User className="w-4 h-4" /> Profile</a></li>
+                <li><a href="/Profile"><User className="w-4 h-4" /> Profile</a></li>
                 <li><a><Settings className="w-4 h-4" /> Settings</a></li>
                 <li>
                   <a className="text-error" onClick={handleLogout}>
@@ -114,5 +115,7 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
 
 
